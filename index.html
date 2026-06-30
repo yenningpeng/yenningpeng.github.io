@@ -1,0 +1,923 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="Portfolio site" subtitle="Personal portfolio — single-page, paper sheet, 5 sections" -->
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yen Ning Peng — Collection</title>
+  <link rel="stylesheet" href="colors_and_type.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--warm-stone);
+      color: var(--ink-900);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+    }
+
+    /* ========= Page-as-paper-sheet ========= */
+    .stage {
+      min-height: 100vh;
+      padding: 10px;
+      background: var(--warm-stone);
+    }
+    .sheet {
+      background: var(--paper);
+      box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+      min-height: calc(100vh - 20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ========= Top right meta ========= */
+    .meta {
+      position: fixed;
+      top: 30px;
+      right: 40px;
+      display: flex;
+      gap: 28px;
+      font-size: 13px;
+      font-family: var(--font-button);
+      z-index: 30;
+      mix-blend-mode: difference;
+      color: #cccccc;
+    }
+    .meta a { color: inherit; text-decoration: none; opacity: 0.7; transition: opacity 160ms ease; }
+    .meta a:hover { opacity: 1; }
+
+    /* ========= Bar (fixed nav) ========= */
+    .bar {
+      position: fixed;
+      left: 40px;
+      bottom: 30px;
+      display: flex;
+      gap: 32px;
+      z-index: 30;
+      mix-blend-mode: difference;
+    }
+    .bar a {
+      color: #cccccc;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 6px 0;
+      transition: opacity 160ms ease;
+      cursor: pointer;
+    }
+    .bar a:hover { opacity: 0.6; }
+    .bar a.is-active { font-weight: 700; }
+
+    /* ========= Footer ========= */
+    .footer {
+      position: fixed;
+      right: 40px;
+      bottom: 30px;
+      font-size: 12px;
+      font-family: var(--font-button);
+      z-index: 30;
+      mix-blend-mode: difference;
+      color: #cccccc;
+      opacity: 0.7;
+    }
+
+    /* ========= Sections ========= */
+    section {
+      min-height: 100vh;
+      padding: 90px 80px 110px;
+      position: relative;
+      scroll-margin-top: 0;
+    }
+
+    /* ====== Hero ====== */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: stretch;
+      padding-top: 120px;
+    }
+    .hero__title {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: clamp(48px, 6.5vw, 96px);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      margin: 0;
+      align-self: center;
+    }
+    .hero__subline {
+      margin-top: 32px;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 380px;
+      color: var(--ink-900);
+    }
+    .hero__stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: calc(100vh - 240px);
+      max-height: 820px;
+      overflow: hidden;
+    }
+    .hero__stack-img {
+      flex: 1;
+      background-repeat: no-repeat;
+      background-position: center var(--hero-bg-y, 50%);
+      background-size: var(--hero-bg-size, cover);
+      transition: flex-grow 600ms cubic-bezier(.2,.8,.2,1);
+      cursor: pointer;
+    }
+    .hero__stack-img:hover { flex-grow: var(--hero-hover-grow, 2.5); }
+
+    .hero__index {
+      position: absolute;
+      left: 80px;
+      top: 90px;
+      font-family: var(--font-button);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--ink-900);
+      opacity: 0.5;
+    }
+
+    /* ====== Section title ====== */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 60px;
+      border-top: 1px solid rgba(37,37,37,0.15);
+      padding-top: 28px;
+    }
+    .section-head__num {
+      font-family: var(--font-button);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      opacity: 0.55;
+    }
+    .section-head__title {
+      font-weight: 400;
+      font-size: 48px;
+      line-height: 1;
+      margin: 0;
+    }
+    .section-head__count {
+      font-family: var(--font-button);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      opacity: 0.55;
+    }
+
+    /* ====== Grid ====== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px 30px;
+    }
+
+    .card {
+      width: 100%;
+      border-radius: 10px;
+      background: var(--white);
+      box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 200ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+    .card__media { padding: 8px; aspect-ratio: 280/179; }
+    .card__image {
+      width: 100%; height: 100%;
+      border-radius: 5px;
+      background: center/cover no-repeat var(--paper-2, #f0f0f0);
+    }
+    .card__body { padding: 6px 16px 18px; display: flex; flex-direction: column; }
+    .card__kicker {
+      font-family: var(--font-button);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      opacity: 0.55;
+      margin-top: 8px;
+    }
+    .card__title {
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 1.1;
+      margin-top: 4px;
+    }
+    .card__desc {
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+    .card__meta {
+      display: flex; gap: 12px;
+      margin-top: 12px;
+      font-family: var(--font-button);
+      font-size: 11px;
+      opacity: 0.6;
+    }
+
+    /* feature card — wide */
+    .card.is-feature { grid-column: span 2; flex-direction: row; }
+    .card.is-feature .card__media { aspect-ratio: auto; flex: 1.2; padding: 8px; }
+    .card.is-feature .card__body { flex: 1; padding: 32px 36px; justify-content: center; }
+    .card.is-feature .card__title { font-size: 28px; }
+
+    /* ====== About ====== */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 80px;
+      padding-top: 120px;
+    }
+    .about__lede {
+      font-weight: 300;
+      font-size: 22px;
+      line-height: 1.55;
+      max-width: 640px;
+    }
+    .about__lede strong { font-weight: 700; }
+
+    .about__facts {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .fact {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 20px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(37,37,37,0.15);
+      font-size: 14px;
+    }
+    .fact__key {
+      font-family: var(--font-button);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      opacity: 0.55;
+      padding-top: 3px;
+    }
+    .fact__val { line-height: 1.5; font-weight: 300; }
+    .fact__val a { color: inherit; }
+
+    /* ====== Detail overlay ====== */
+    .detail {
+      position: fixed;
+      inset: 0;
+      background: rgba(37,37,37,0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      animation: fade 200ms ease both;
+    }
+    .detail.is-open { display: flex; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    .detail__inner {
+      width: 1100px;
+      max-width: 100%;
+      max-height: 88vh;
+      background: var(--white);
+      border-radius: 10px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 0.85fr;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+    }
+    .detail__image {
+      background: center/cover no-repeat var(--paper);
+      min-height: 540px;
+    }
+
+    /* ====== Carousel inside detail ====== */
+    .carousel {
+      position: relative;
+      min-height: 540px;
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .carousel__track {
+      position: absolute; inset: 0;
+      will-change: transform;
+    }
+    /* Slide mode (default) */
+    .carousel--slide .carousel__track {
+      display: flex;
+      transition: transform 500ms cubic-bezier(.2,.8,.2,1);
+    }
+    .carousel--slide .carousel__slide {
+      flex: 0 0 100%;
+      background: center/cover no-repeat;
+    }
+    /* Fade mode */
+    .carousel--fade .carousel__track { display: block; }
+    .carousel--fade .carousel__slide {
+      position: absolute; inset: 0;
+      background: center/cover no-repeat;
+      opacity: 0;
+      transition: opacity 500ms ease;
+    }
+    .carousel--fade .carousel__slide.is-current { opacity: 1; }
+    /* Zoom mode (Ken Burns) */
+    .carousel--zoom .carousel__track { display: block; }
+    .carousel--zoom .carousel__slide {
+      position: absolute; inset: 0;
+      background: center/cover no-repeat;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 600ms ease, transform 1200ms cubic-bezier(.2,.8,.2,1);
+    }
+    .carousel--zoom .carousel__slide.is-current {
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* Default fallback */
+    .carousel__slide {
+      background: center/cover no-repeat;
+    }
+    .carousel__btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px; height: 40px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 0;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-family: "Inria Sans", var(--font-sans);
+      color: var(--ink-900);
+      font-size: 18px;
+      transition: opacity 160ms ease, transform 160ms ease;
+      z-index: 2;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .carousel__btn:hover { transform: translateY(-50%) scale(1.06); }
+    .carousel__btn--prev { left: 14px; }
+    .carousel__btn--next { right: 14px; }
+    /* Square button variant */
+    .carousel--btn-square .carousel__btn {
+      border-radius: 0;
+      width: 44px; height: 44px;
+      background: var(--white);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    /* Minimal button variant */
+    .carousel--btn-minimal .carousel__btn {
+      background: transparent;
+      backdrop-filter: none;
+      box-shadow: none;
+      color: var(--white);
+      mix-blend-mode: difference;
+      font-size: 28px;
+    }
+    .carousel__dots {
+      position: absolute;
+      left: 0; right: 0; bottom: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      z-index: 2;
+    }
+    .carousel__dot {
+      width: 6px; height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.55);
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      transition: width 200ms ease, background 200ms ease;
+    }
+    .carousel__dot.is-active {
+      width: 22px;
+      background: var(--white);
+    }
+    .carousel__counter {
+      position: absolute;
+      top: 14px; left: 14px;
+      font-family: "Inria Sans", var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      background: rgba(37,37,37,0.55);
+      padding: 4px 10px;
+      border-radius: 999px;
+      z-index: 2;
+    }
+    .detail__body {
+      padding: 56px 56px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+    .detail__kicker {
+      font-family: var(--font-button);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      opacity: 0.6;
+    }
+    .detail__title {
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 1.1;
+      margin: 0;
+    }
+    .detail__desc {
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-top: 4px;
+    }
+    .detail__facts {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 24px;
+      font-size: 13px;
+    }
+    .detail__facts dt {
+      font-family: var(--font-button);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      opacity: 0.55;
+      padding-top: 1px;
+    }
+    .detail__facts dd { margin: 0; font-weight: 300; }
+    .detail__close {
+      align-self: flex-start;
+      margin-top: auto;
+      background: var(--ink-900);
+      color: var(--white);
+      border: 0;
+      border-radius: 4px;
+      padding: 12px 22px;
+      font-family: "Inria Sans", var(--font-sans);
+      font-size: 14px;
+      cursor: pointer;
+      transition: opacity 160ms ease;
+    }
+    .detail__close:hover { opacity: 0.85; }
+
+    /* ====== Reveal on scroll ====== */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 700ms ease, transform 700ms cubic-bezier(.2,.8,.2,1); }
+    .reveal.is-in { opacity: 1; transform: none; }
+
+    /* ====== Empty state for Artwork ====== */
+    .empty {
+      padding: 120px 0;
+      text-align: left;
+    }
+    .empty__title {
+      font-size: 48px;
+      line-height: 1.1;
+      font-weight: 400;
+      margin: 0;
+    }
+    .empty__sub {
+      margin-top: 24px;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 480px;
+      opacity: 0.7;
+    }
+
+    /* ====== Responsive ====== */
+    @media (max-width: 900px) {
+      section { padding: 80px 32px 120px; }
+      .hero { grid-template-columns: 1fr; }
+      .hero__stack { height: 70vh; }
+      .about { grid-template-columns: 1fr; gap: 40px; }
+      .card.is-feature { grid-column: span 1; flex-direction: column; }
+      .meta { right: 20px; top: 20px; gap: 16px; }
+      .bar { left: 20px; bottom: 16px; gap: 18px; }
+      .footer { right: 20px; bottom: 16px; font-size: 11px; }
+      .detail__inner { grid-template-columns: 1fr; }
+      .detail__image, .carousel { min-height: 280px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ====== Baked-in design settings (from Claude Design Tweaks defaults) ====== -->
+<script>
+  // Designer-tuned defaults, baked in so the live site matches the design intent.
+  // (The interactive Tweaks panel was design-time only and has been removed.)
+  window.__TWEAKS = {
+    transition: "zoom",
+    autoplay: false,
+    autoplaySpeed: 5.5,
+    counterMode: "dots",
+    btnStyle: "minimal",
+    openFirstOnLoad: false,
+    heroHeight: 65,
+    heroHoverGrow: 5,
+    heroFit: "cover",
+    heroZoom: 100,
+    heroY0: 54,
+    heroY1: 56,
+    heroY2: 50,
+    heroY3: 50
+  };
+
+  // Apply hero tweaks to :root exactly as the design panel did.
+  (function applyHeroDefaults() {
+    var t = window.__TWEAKS;
+    var r = document.documentElement.style;
+    r.setProperty('--hero-h', t.heroHeight + 'vh');
+    r.setProperty('--hero-hover-grow', String(t.heroHoverGrow));
+    r.setProperty('--hero-bg-size', t.heroZoom === 100 ? t.heroFit : (t.heroZoom + '% auto'));
+    r.setProperty('--hero-y-0', t.heroY0 + '%');
+    r.setProperty('--hero-y-1', t.heroY1 + '%');
+    r.setProperty('--hero-y-2', t.heroY2 + '%');
+    r.setProperty('--hero-y-3', t.heroY3 + '%');
+  })();
+</script>
+
+
+<!-- Floating bar nav -->
+<nav class="bar" aria-label="Primary">
+  <a href="#graphic" data-link="graphic">Product Design</a>
+  <a href="#three-d" data-link="three-d">3D Design</a>
+  <a href="#artwork" data-link="artwork">Graphic</a>
+  <a href="#about" data-link="about">About</a>
+</nav>
+
+<div class="footer">2026 Yen Ning Peng All rights reserved.</div>
+
+<div class="stage">
+  <div class="sheet">
+
+    <!-- ========== HERO ========== -->
+    <section id="top" data-screen-label="01 Hero">
+      <div class="hero__index">EST. 2026</div>
+      <div class="hero">
+        <div>
+          <h1 class="hero__title">YEN NING<br>PENG<br>COLLECTION</h1>
+          <p class="hero__subline">Designer working across graphic systems, 3D objects, and artwork. A small archive of projects that prefer slowness over noise.</p>
+        </div>
+        <div class="hero__stack" aria-hidden="true" style="height: var(--hero-h, auto)">
+          <div class="hero__stack-img" data-hero="0" style="background-image: url(assets/Hero%20Images/Heroimages01.jpg); --hero-bg-y: var(--hero-y-0, 50%);"></div>
+          <div class="hero__stack-img" data-hero="1" style="background-image: url(assets/Hero%20Images/Heroimages02.jpg); --hero-bg-y: var(--hero-y-1, 50%);"></div>
+          <div class="hero__stack-img" data-hero="2" style="background-image: url(assets/Hero%20Images/Heroimages03.jpg); --hero-bg-y: var(--hero-y-2, 50%);"></div>
+          <div class="hero__stack-img" data-hero="3" style="background-image: url(assets/Hero%20Images/Heroimages04.jpg); --hero-bg-y: var(--hero-y-3, 50%);"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PRODUCT DESIGN ========== -->
+    <section id="graphic" data-screen-label="02 Product Design">
+      <div class="section-head">
+        <span class="section-head__num">01 / PRODUCT</span>
+        <h2 class="section-head__title">Product Design</h2>
+        <span class="section-head__count">Six projects</span>
+      </div>
+      <div class="grid" id="grid-graphic"></div>
+    </section>
+
+    <!-- ========== 3D DESIGN ========== -->
+    <section id="three-d" data-screen-label="03 3D Design">
+      <div class="section-head">
+        <span class="section-head__num">02 / 3D</span>
+        <h2 class="section-head__title">3D Design</h2>
+        <span class="section-head__count">Five objects</span>
+      </div>
+      <div class="grid" id="grid-3d"></div>
+    </section>
+
+    <!-- ========== GRAPHIC ========== -->
+    <section id="artwork" data-screen-label="04 Graphic">
+      <div class="section-head">
+        <span class="section-head__num">03 / GRAPHIC</span>
+        <h2 class="section-head__title">Graphic</h2>
+        <span class="section-head__count">Four works</span>
+      </div>
+      <div class="grid" id="grid-artwork"></div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section id="about" data-screen-label="05 About">
+      <div class="section-head">
+        <span class="section-head__num">04 / ABOUT</span>
+        <h2 class="section-head__title">About</h2>
+        <span class="section-head__count">— · —</span>
+      </div>
+      <div class="about">
+        <div>
+          <p class="about__lede">
+            大學畢業於工業產品設計學系，擅長極簡的風格刻劃描繪，以簡單造型呈現物體的質感。曾於軟體前端開發、紙模型禮品、印刷產業服務。對產品從設計到量產各階段皆有參與經驗。
+          </p>
+          <p class="about__lede" style="margin-top: 24px; font-size: 16px; opacity: 0.8;">
+            I graduated with a Bachelor's degree in Industrial Product Design,
+            specializing in minimalist design with a focus on expressing
+            materiality through clean, simple forms. My professional experience
+            spans front-end software development, paper model gift design, and
+            the printing industry. Throughout my career, I have been involved in
+            every stage of the product development process, from concept and
+            design to production and mass manufacturing.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ========== Detail overlay ========== -->
+<div class="detail" id="detail" role="dialog" aria-modal="true">
+  <div class="detail__inner">
+    <div class="carousel carousel--slide carousel--btn-pill" id="detail-carousel">
+      <div class="carousel__counter" id="carousel-counter">1 / 1</div>
+      <div class="carousel__track" id="carousel-track"></div>
+      <button class="carousel__btn carousel__btn--prev" id="carousel-prev" aria-label="Previous">‹</button>
+      <button class="carousel__btn carousel__btn--next" id="carousel-next" aria-label="Next">›</button>
+      <div class="carousel__dots" id="carousel-dots"></div>
+    </div>
+    <div class="detail__body">
+      <div class="detail__kicker" id="detail-kicker">PROJECT</div>
+      <h3 class="detail__title" id="detail-title">標題</h3>
+      <p class="detail__desc" id="detail-desc">滾滾長江東逝水，浪花淘盡英雄。</p>
+      <dl class="detail__facts" id="detail-facts"></dl>
+      <button class="detail__close" id="detail-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============ Project data ============
+  const PROJECTS = {
+    graphic: [
+      { id: 'g1', kicker: 'ACCESSORY', title: 'Enamel Pin', body: '造型別針 — 將鳥獸戲畫的滑稽動物重製成造型別針。別針、背景圖卡設計。', client: 'Selected Works', year: '2018-2023', tags: ['Accessory', 'Illustration', 'Print'], images: ['assets/Product%20Design/Pin_media/Pin01.jpg', 'assets/Product%20Design/Pin_media/Pin02.jpg', 'assets/Product%20Design/Pin_media/Pin03.jpg', 'assets/Product%20Design/Pin_media/Pin04.jpg', 'assets/Product%20Design/Pin_media/Pin05.jpg'], feature: true },
+      { id: 'g2', kicker: 'STATIONERY', title: 'Note Paper', body: '立式便條紙 — 有切割造型的立式便條紙，有各種不同主題。刀模、包裝設計、便條紙印刷。', client: 'Selected Works', year: '2018-2023', tags: ['Stationery', 'Die-cut', 'Packaging'], images: ['assets/Product%20Design/note_paper_media/note_paper01.JPG', 'assets/Product%20Design/note_paper_media/note_paper02.jpg', 'assets/Product%20Design/note_paper_media/note_paper03.jpg'] },
+      { id: 'g3', kicker: 'PAPERCRAFT', title: 'Pop-up Card', body: '名畫彈簧卡系列 — 將名畫變成有景深變化的彈簧卡，並加入一些小小的彩蛋創意。', client: 'Selected Works', year: '2018-2023', tags: ['Papercraft', 'Card'], images: ['assets/Product%20Design/pop_up_card_media/popup_card01.png', 'assets/Product%20Design/pop_up_card_media/popup_card02.png', 'assets/Product%20Design/pop_up_card_media/popup_card03.jpg', 'assets/Product%20Design/pop_up_card_media/popup_card04.jpg', 'assets/Product%20Design/pop_up_card_media/popup_card05.jpg'] },
+      { id: 'g4', kicker: 'PAPERCRAFT', title: 'Paper Model', body: '紙模型作品 — 從建模、展開到印刷組裝的紙藝練習。', client: 'Selected Works', year: '2018-2023', tags: ['Papercraft', '3D'], images: ['assets/Product%20Design/papermodel_media/papermodel01.jpg', 'assets/Product%20Design/papermodel_media/papermodel02.jpg', 'assets/Product%20Design/papermodel_media/papermodel03.jpeg'] },
+      { id: 'g5', kicker: 'PAPERCRAFT', title: 'Head Model Series', body: '名人紙雕頭像 — 從 3D 建模、展開、印刷到摺疊組裝。', client: 'Selected Works', year: '2018-2023', tags: ['Papercraft', '3D', 'Portrait'], images: ['assets/Product%20Design/headmodel_media/headmodel_Moai.jpg', 'assets/Product%20Design/headmodel_media/headmodel_Hemingway.jpg', 'assets/Product%20Design/headmodel_media/headmodel_JaneAustin.JPG', 'assets/Product%20Design/headmodel_media/headmodel_GIF.gif', 'assets/Product%20Design/headmodel_media/headmodel_GIF2.gif'] },
+      { id: 'g6', kicker: 'PAPERCRAFT', title: 'Paper City', body: '紙雕城市天際線 — 由城市的天際線、著名建築與景點發想，轉化成簡約的平面風格。雷射切割的簍空造型點綴燈光後呈現獨特氛圍。', client: 'Selected Works', year: '2018-2023', tags: ['Papercraft', 'Lasercut', 'Scene'], images: ['assets/Product%20Design/PaperCity_media/PaperCity_01.jpg', 'assets/Product%20Design/PaperCity_media/PaperCity_02.jpg', 'assets/Product%20Design/PaperCity_media/PaperCity_03.jpg', 'assets/Product%20Design/PaperCity_media/PaperCity_04.jpg', 'assets/Product%20Design/PaperCity_media/PaperCity_05.jpg'] },
+    ],
+    threeD: [
+      { id: 't1', kicker: 'PRODUCT', title: 'Bio-function Chair', body: '仿生工學機能椅 — 以拉桿頂桿與機械結構模仿人體的骨盆骨頭與韌帶，讓椅片之間承受重量時能夠分散受力。', client: 'Personal', year: '-2017', tags: ['Product', 'Furniture', 'Bionics'], images: ['assets/3D%20Design/Bio-function%20Chair/Bio-function%20Chair01.png', 'assets/3D%20Design/Bio-function%20Chair/Bio-function%20Chair02.jpg', 'assets/3D%20Design/Bio-function%20Chair/Bio-function%20Chair03.png', 'assets/3D%20Design/Bio-function%20Chair/Bio-function%20Chair04.png', 'assets/3D%20Design/Bio-function%20Chair/Bio-function%20Chair05.png'], feature: true },
+      { id: 't3', kicker: 'PRODUCT', title: 'Cosmetic Mirror', body: '使用臉部掃描功能，智能分析並為使用者挑選適合的妝容風格。藉由動作偵測，來輔助使用者進行上妝動作。獲得馬來西亞 ITEX 2015 銅獎。', client: 'Award · ITEX 2015', year: '-2017', tags: ['Product', 'Smart', 'Award'], images: ['assets/3D%20Design/Cosmetic%20Mirror/Cosmetic%20Mirror01.jpg', 'assets/3D%20Design/Cosmetic%20Mirror/Cosmetic%20Mirror02.jpg', 'assets/3D%20Design/Cosmetic%20Mirror/Cosmetic%20Mirror03.jpg', 'assets/3D%20Design/Cosmetic%20Mirror/Cosmetic%20Mirror04.jpg', 'assets/3D%20Design/Cosmetic%20Mirror/Cosmetic%20Mirror05.jpg'] },
+      { id: 't4', kicker: 'OBJECT', title: 'FengShui Lamp', body: '風水桌面裝飾燈 — 用壓克力及環氧樹脂灌模、並埋入光纖以引導底座燈光，以 Arduino 寫入晶片控制呼吸燈程序。', client: 'Personal', year: '-2017', tags: ['Object', 'Light', 'Arduino'], images: ['assets/3D%20Design/FengShui%20Lamp/FengShui_Lamp01.png', 'assets/3D%20Design/FengShui%20Lamp/FengShui_Lamp02.JPG', 'assets/3D%20Design/FengShui%20Lamp/FengShui_Lamp03.JPG', 'assets/3D%20Design/FengShui%20Lamp/FengShui_Lamp04.JPG', 'assets/3D%20Design/FengShui%20Lamp/FengShui_Lamp05.JPG'] },
+      { id: 't5', kicker: 'FORM STUDY', title: 'SpeedForm', body: '模仿生物躍動的速度型體設計，以 PU 泡棉為底，覆上油土雕塑成形。', client: 'Personal', year: '-2017', tags: ['Form', 'Sculpture', 'Clay'], images: ['assets/3D%20Design/Speedform/Speedform01.png'] },
+      { id: 't6', kicker: 'VEHICLE', title: 'Steampunk Cafe Racer', body: '融合了 Steampunk 風格的設計，並結合 Cafe Racer 要素的一款燃料電池摩托車。', client: 'Concept', year: '-2017', tags: ['Vehicle', 'Steampunk', 'Concept'], images: ['assets/3D%20Design/Steampunk%20Cafe%20Racer/Steampunk%20Cafe%20Racer01.jpg', 'assets/3D%20Design/Steampunk%20Cafe%20Racer/Steampunk%20Cafe%20Racer02.jpg', 'assets/3D%20Design/Steampunk%20Cafe%20Racer/Steampunk%20Cafe%20Racer03.jpeg', 'assets/3D%20Design/Steampunk%20Cafe%20Racer/Steampunk%20Cafe%20Racer04.jpeg'] },
+    ],
+    artwork: [
+      { id: 'a1', kicker: 'DIGITAL', title: 'Digital Painting', body: '電腦繪圖系列 — 主要繪圖題材為 ACG 人物。', client: 'Personal', year: '-2017', tags: ['Digital', 'Illustration'], images: ['assets/Graphic/Digital%20Painting/DigitalPainting01.png', 'assets/Graphic/Digital%20Painting/DigitalPainting02.png', 'assets/Graphic/Digital%20Painting/DigitalPainting03.png', 'assets/Graphic/Digital%20Painting/DigitalPainting04.png'], feature: true },
+      { id: 'a2', kicker: 'MARKER', title: 'Marker Pen Painting', body: '麥克筆表現技法繪圖 — 描繪工具、以及著名的椅子。', client: 'Personal', year: '-2017', tags: ['Marker', 'Sketch'], images: ['assets/Graphic/Marker%20Pen%20Painting/MarkerPen01.PNG', 'assets/Graphic/Marker%20Pen%20Painting/MarkerPen02.png', 'assets/Graphic/Marker%20Pen%20Painting/MarkerPen03.PNG', 'assets/Graphic/Marker%20Pen%20Painting/MarkerPen04.png'] },
+      { id: 'a3', kicker: 'POSTER', title: 'Poster', body: '在校時期的演講活動海報設計與系所畢業紀念冊封面設計。', client: 'Personal', year: '-2017', tags: ['Poster', 'Print'], images: ['assets/Graphic/Poster/Poster01.png', 'assets/Graphic/Poster/Poster02.PNG', 'assets/Graphic/Poster/Poster03.png'] },
+      { id: 'a4', kicker: 'UI', title: 'UI Design', body: 'UI 設計 — 於車機導航公司服務時參與的介面設計。', client: 'Selected Works', year: '-2017', tags: ['UI', 'Automotive'], images: ['assets/Graphic/UI%20Design/UI01.png'] },
+    ],
+  };
+
+  // ============ Render grids ============
+  function getCoverIdx(p) {
+    try {
+      const v = localStorage.getItem(`cover:${p.id}`);
+      if (v !== null) return Math.max(0, Math.min((p.images||[]).length - 1, +v));
+    } catch (e) {}
+    return 0;
+  }
+  function setCoverIdx(pid, idx) {
+    try { localStorage.setItem(`cover:${pid}`, String(idx)); } catch (e) {}
+  }
+  function renderGrid(id, items) {
+    const el = document.getElementById(id);
+    el.innerHTML = items.map((p, i) => `
+      <article class="card reveal ${p.feature && i === 0 ? 'is-feature' : ''}" data-id="${p.id}" style="transition-delay: ${i * 60}ms">
+        <div class="card__media"><div class="card__image" style="background-image: url(${p.images[getCoverIdx(p)]})"></div></div>
+        <div class="card__body">
+          <div class="card__kicker">${p.kicker}</div>
+          <div class="card__title">${p.title}</div>
+          <div class="card__desc">${p.body}</div>
+          <div class="card__meta"><span>${p.client}</span><span>·</span><span>${p.year}</span></div>
+        </div>
+      </article>
+    `).join('');
+  }
+  window.__rerenderGrids = () => {
+    renderGrid('grid-graphic', PROJECTS.graphic);
+    renderGrid('grid-3d', PROJECTS.threeD);
+    renderGrid('grid-artwork', PROJECTS.artwork);
+    document.querySelectorAll('.card.reveal').forEach(el => el.classList.add('is-in'));
+  };
+  renderGrid('grid-graphic', PROJECTS.graphic);
+  renderGrid('grid-3d', PROJECTS.threeD);
+  renderGrid('grid-artwork', PROJECTS.artwork);
+
+  // expose for Tweaks panel
+  window.__PROJECTS = PROJECTS;
+  window.__setCover = (pid, idx) => { setCoverIdx(pid, idx); window.__rerenderGrids(); };
+  window.__getCover = (pid) => {
+    const all = [...PROJECTS.graphic, ...PROJECTS.threeD, ...PROJECTS.artwork];
+    const p = all.find(x => x.id === pid);
+    return p ? getCoverIdx(p) : 0;
+  };
+  const ALL = [...PROJECTS.graphic, ...PROJECTS.threeD, ...PROJECTS.artwork];
+  const detail = document.getElementById('detail');
+  const detailTitle = document.getElementById('detail-title');
+  const detailKicker = document.getElementById('detail-kicker');
+  const detailDesc = document.getElementById('detail-desc');
+  const detailFacts = document.getElementById('detail-facts');
+  const cTrack = document.getElementById('carousel-track');
+  const cDots = document.getElementById('carousel-dots');
+  const cCounter = document.getElementById('carousel-counter');
+  const cPrev = document.getElementById('carousel-prev');
+  const cNext = document.getElementById('carousel-next');
+
+  let cIndex = 0, cImages = [], cAutoplayTimer = null;
+  const carouselEl = document.getElementById('detail-carousel');
+
+  function applyTweaksToCarousel() {
+    const t = window.__TWEAKS || {};
+    carouselEl.classList.remove('carousel--slide', 'carousel--fade', 'carousel--zoom');
+    carouselEl.classList.add('carousel--' + (t.transition || 'slide'));
+    carouselEl.classList.remove('carousel--btn-pill', 'carousel--btn-square', 'carousel--btn-minimal');
+    carouselEl.classList.add('carousel--btn-' + (t.btnStyle || 'pill'));
+    // counter mode
+    const mode = t.counterMode || 'both';
+    cCounter.style.display = (mode === 'numeric' || mode === 'both') && cImages.length > 1 ? '' : 'none';
+    cDots.style.display    = (mode === 'dots'    || mode === 'both') && cImages.length > 1 ? '' : 'none';
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    const t = window.__TWEAKS || {};
+    if (!t.autoplay || cImages.length <= 1) return;
+    cAutoplayTimer = setInterval(() => goSlide(cIndex + 1), (t.autoplaySpeed || 3.5) * 1000);
+  }
+  function stopAutoplay() {
+    if (cAutoplayTimer) { clearInterval(cAutoplayTimer); cAutoplayTimer = null; }
+  }
+
+  function getSlideCrop(p, idx) {
+    const key = `crop:${p.id}:${idx}`;
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return { x: 50, y: 50, size: 'cover', zoom: 100 };
+  }
+  function setSlideCrop(p, idx, crop) {
+    try { localStorage.setItem(`crop:${p.id}:${idx}`, JSON.stringify(crop)); } catch (e) {}
+  }
+  function cropToCss(crop) {
+    const x = crop.x ?? 50, y = crop.y ?? 50;
+    const sizeCss = crop.size === 'contain' ? 'contain'
+                  : crop.size === 'custom'  ? `${crop.zoom || 100}%`
+                  : 'cover';
+    return `background-image:var(--bg);background-position:${x}% ${y}%;background-size:${sizeCss};background-repeat:no-repeat;`;
+  }
+  function applyCropToSlide(slideEl, p, idx) {
+    const crop = getSlideCrop(p, idx);
+    const x = crop.x ?? 50, y = crop.y ?? 50;
+    slideEl.style.backgroundPosition = `${x}% ${y}%`;
+    slideEl.style.backgroundSize = crop.size === 'contain' ? 'contain'
+                                 : crop.size === 'custom'  ? `${crop.zoom || 100}%`
+                                 : 'cover';
+  }
+  let cCurrentProject = null;
+  function renderCarousel() {
+    const t = window.__TWEAKS || {};
+    const isSlide = (t.transition || 'slide') === 'slide';
+    cTrack.innerHTML = cImages.map((src, i) => `<div class="carousel__slide${i === cIndex ? ' is-current' : ''}" style="background-image:url(${src})" data-slide-idx="${i}"></div>`).join('');
+    cDots.innerHTML = cImages.map((_, i) => `<button class="carousel__dot${i === cIndex ? ' is-active' : ''}" data-i="${i}" aria-label="Slide ${i+1}"></button>`).join('');
+    if (isSlide) cTrack.style.transform = `translateX(-${cIndex * 100}%)`;
+    else cTrack.style.transform = '';
+    cCounter.textContent = `${cIndex + 1} / ${cImages.length}`;
+    const single = cImages.length <= 1;
+    cPrev.style.display = single ? 'none' : '';
+    cNext.style.display = single ? 'none' : '';
+    // apply persisted crops to all slides
+    if (cCurrentProject) {
+      [...cTrack.children].forEach((el, idx) => applyCropToSlide(el, cCurrentProject, idx));
+    }
+    applyTweaksToCarousel();
+    if (window.__notifyCropChanged) window.__notifyCropChanged();
+  }
+  function goSlide(i) {
+    const t = window.__TWEAKS || {};
+    cIndex = (i + cImages.length) % cImages.length;
+    if ((t.transition || 'slide') === 'slide') {
+      cTrack.style.transform = `translateX(-${cIndex * 100}%)`;
+    } else {
+      [...cTrack.children].forEach((s, idx) => s.classList.toggle('is-current', idx === cIndex));
+    }
+    [...cDots.children].forEach((d, idx) => d.classList.toggle('is-active', idx === cIndex));
+    cCounter.textContent = `${cIndex + 1} / ${cImages.length}`;
+    if (window.__notifyCropChanged) window.__notifyCropChanged();
+  }
+
+  // Live update from crop tweak controls
+  window.__updateCurrentCrop = (patch) => {
+    if (!cCurrentProject || !cTrack.children[cIndex]) return;
+    const cur = getSlideCrop(cCurrentProject, cIndex);
+    const next = { ...cur, ...patch };
+    setSlideCrop(cCurrentProject, cIndex, next);
+    applyCropToSlide(cTrack.children[cIndex], cCurrentProject, cIndex);
+  };
+  window.__getCurrentCrop = () => {
+    if (!cCurrentProject) return null;
+    return { project: cCurrentProject.title, slideIdx: cIndex, ...getSlideCrop(cCurrentProject, cIndex) };
+  };
+  window.__resetCurrentCrop = () => {
+    if (!cCurrentProject) return;
+    try { localStorage.removeItem(`crop:${cCurrentProject.id}:${cIndex}`); } catch (e) {}
+    if (cTrack.children[cIndex]) applyCropToSlide(cTrack.children[cIndex], cCurrentProject, cIndex);
+    if (window.__notifyCropChanged) window.__notifyCropChanged();
+  };
+  // expose for tweak live updates
+  window.__refreshCarousel = () => { renderCarousel(); startAutoplay(); };
+  cPrev.addEventListener('click', () => goSlide(cIndex - 1));
+  cNext.addEventListener('click', () => goSlide(cIndex + 1));
+  cDots.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-i]');
+    if (b) goSlide(+b.dataset.i);
+  });
+
+  document.body.addEventListener('click', (e) => {
+    const card = e.target.closest('.card');
+    if (!card) return;
+    const p = ALL.find(p => p.id === card.dataset.id);
+    if (!p) return;
+    cImages = p.images || [p.image];
+    cIndex = 0;
+    cCurrentProject = p;
+    renderCarousel();
+    startAutoplay();
+    detailTitle.textContent = p.title;
+    detailKicker.textContent = p.kicker;
+    detailDesc.textContent = p.body;
+    detailFacts.innerHTML = `
+      <dt>CLIENT</dt><dd>${p.client}</dd>
+      <dt>YEAR</dt><dd>${p.year}</dd>
+      <dt>TAGS</dt><dd>${p.tags.join(' · ')}</dd>
+    `;
+    detail.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  });
+
+  function closeDetail() {
+    detail.classList.remove('is-open');
+    document.body.style.overflow = '';
+    stopAutoplay();
+  }
+  document.getElementById('detail-close').addEventListener('click', closeDetail);
+  detail.addEventListener('click', (e) => { if (e.target === detail) closeDetail(); });
+  document.addEventListener('keydown', (e) => {
+    if (!detail.classList.contains('is-open')) return;
+    if (e.key === 'Escape') closeDetail();
+    if (e.key === 'ArrowLeft' && cImages.length > 1) goSlide(cIndex - 1);
+    if (e.key === 'ArrowRight' && cImages.length > 1) goSlide(cIndex + 1);
+  });
+
+  // ============ Reveal on scroll ============
+  const io = new IntersectionObserver((entries) => {
+    for (const en of entries) {
+      if (en.isIntersecting) en.target.classList.add('is-in');
+    }
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // also tag the section heads
+  document.querySelectorAll('.section-head').forEach(el => { el.classList.add('reveal'); io.observe(el); });
+
+  // ============ Active nav highlight ============
+  const links = [...document.querySelectorAll('.bar a')];
+  const sections = links.map(l => document.querySelector(l.getAttribute('href')));
+  function syncActive() {
+    const y = window.scrollY + window.innerHeight * 0.35;
+    let active = null;
+    for (let i = 0; i < sections.length; i++) {
+      if (sections[i] && sections[i].offsetTop <= y) active = links[i];
+    }
+    links.forEach(l => l.classList.toggle('is-active', l === active));
+  }
+  window.addEventListener('scroll', syncActive, { passive: true });
+  syncActive();
+
+  // smooth scroll
+  links.forEach(l => l.addEventListener('click', (e) => {
+    e.preventDefault();
+    const t = document.querySelector(l.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
+</script>
+
+</body>
+</html>

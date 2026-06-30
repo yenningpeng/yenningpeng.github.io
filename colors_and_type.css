@@ -1,0 +1,203 @@
+/* ============================================================
+   Yen Ning Peng — Portfolio Design System
+   Colors & Type tokens
+   ============================================================ */
+
+/* ---------- Fonts ---------- */
+/* Google Sans Flex isn't on Google Fonts. Closest open match:
+   Google Sans Code (variable) for the same family vibe, or
+   DM Sans / Inter for a safer fallback. We use DM Sans here. */
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=Inria+Sans:wght@300;400;700&display=swap");
+
+:root {
+  /* ---------- Base color tokens ---------- */
+  --ink-900: rgb(37, 37, 37);          /* primary text + dark surfaces */
+  --ink-800: rgb(22, 22, 22);          /* near-black accents */
+  --ink-700: rgb(55, 50, 48);          /* warm dark */
+  --ink-600: rgb(55, 40, 32);          /* deep umber */
+
+  --paper:   rgb(232, 232, 232);       /* primary surface — warm grey */
+  --paper-2: rgb(240, 240, 240);       /* slightly lighter for nesting */
+  --white:   rgb(255, 255, 255);
+
+  --warm-stone:  rgb(132, 128, 126);   /* page background — taupe */
+  --warm-clay:   rgb(164, 134, 119);   /* mid clay accent */
+  --warm-rust:   rgb(157, 70, 26);     /* rust */
+  --warm-bronze: rgb(94, 48, 25);      /* bronze */
+  --warm-cocoa:  rgb(80, 40, 18);      /* cocoa */
+
+  --accent-violet: rgb(138, 56, 245);  /* dashed-frame violet (designer guides) */
+  --accent-violet-2: rgb(151, 71, 255);
+
+  --shadow-soft: 0 4px 4px rgba(0, 0, 0, 0.25);
+  --shadow-flat: 0 4px 4px rgba(0, 0, 0, 0);    /* "shadow off" — used for dimmed cards */
+
+  /* ---------- Semantic tokens ---------- */
+  --bg-page:        var(--warm-stone);
+  --bg-surface:     var(--paper);
+  --bg-card:        var(--white);
+  --bg-card-muted:  rgba(232, 232, 232, 0.4);
+  --bg-inverse:     var(--ink-900);
+
+  --fg-primary:     var(--ink-900);
+  --fg-secondary:   rgb(55, 50, 48);
+  --fg-muted:       var(--warm-stone);
+  --fg-on-dark:     var(--white);
+
+  --stroke-guide:   var(--accent-violet);   /* 1px dashed designer guide */
+  --stroke-hairline: rgba(37, 37, 37, 0.12);
+
+  /* ---------- Type ---------- */
+  --font-sans: "DM Sans", "Google Sans Flex", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-button: "Inria Sans", "DM Sans", system-ui, sans-serif;
+
+  --fw-light: 300;    /* @kind font */
+  --fw-regular: 400;  /* @kind font */
+  --fw-medium: 500;   /* @kind font */
+  --fw-bold: 700;     /* @kind font */
+
+  /* Sizes pulled from Figma usage:
+     64 hero / 48 page-title / 20 card-title (bold) / 18 nav / 15 caption / 14 body-small */
+  --fs-hero: 64px;
+  --fs-display: 48px;
+  --fs-title: 20px;
+  --fs-nav: 18px;
+  --fs-caption: 15px;
+  --fs-body: 14px;
+
+  --lh-tight: 1;          /* @kind font */
+  --lh-snug: 1.15;        /* @kind font */
+  --lh-normal: 1.4;       /* @kind font */
+
+  /* ---------- Spacing / radius ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 10px;        /* the most-used gap in the file */
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 40px;
+  --space-10: 60px;       /* button / bar height */
+
+  --radius-xs: 4px;       /* button */
+  --radius-sm: 5px;       /* image inside card / outer dashed frame */
+  --radius-md: 10px;      /* card */
+
+  --bar-height: 60px;
+  --bar-button: 130px;
+  --gutter: 162px;        /* left rail padding on hero panel */
+}
+
+/* ---------- Element resets / base ---------- */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--fg-primary);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-tight);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Semantic typographic classes ---------- */
+.t-hero {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-hero);
+  line-height: var(--lh-tight);
+  color: var(--fg-primary);
+  letter-spacing: -0.01em;
+}
+
+.t-display {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  color: var(--fg-primary);
+}
+
+.t-title {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-title);
+  line-height: var(--lh-tight);
+  color: var(--fg-primary);
+}
+
+.t-nav {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-nav);
+  line-height: var(--lh-tight);
+  color: var(--fg-primary);
+}
+
+.t-caption {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-tight);
+  color: var(--fg-primary);
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-light);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  color: var(--fg-primary);
+}
+
+/* ---------- Surface / card primitives ---------- */
+.surface-paper {
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.card--muted {
+  opacity: 0.7;
+  box-shadow: var(--shadow-flat);
+}
+
+/* ---------- Button ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--bar-button);
+  height: var(--bar-height);
+  padding: 1px 21px;
+  border-radius: var(--radius-xs);
+  background: var(--ink-900);
+  color: var(--white);
+  font-family: var(--font-button);
+  font-size: var(--fs-caption);
+  text-align: center;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  transition: opacity 160ms ease, background-color 160ms ease;
+}
+.btn:hover { opacity: 0.85; }
+.btn:active { opacity: 0.7; }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--fg-primary);
+  border-radius: 0;
+  padding: 0;
+  width: auto;
+  font-family: var(--font-sans);
+  font-size: var(--fs-nav);
+}
+.btn--ghost:hover { opacity: 0.6; }
