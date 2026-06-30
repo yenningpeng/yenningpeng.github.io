@@ -1,0 +1,187 @@
+/* Portfolio site styles — adapted from the design handoff ui_kit */
+@import url("colors_and_type.css");
+
+* { box-sizing: border-box; }
+
+body { margin: 0; background: var(--warm-stone); font-family: var(--font-sans); color: var(--ink-900); }
+
+/* ---------- Stage / paper sheet ---------- */
+.ynp-stage {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--warm-stone);
+  padding: 10px;
+}
+.ynp-sheet {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 20px);
+  background: var(--paper);
+  box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+  padding: 70px 80px 110px;
+}
+.ynp-sheet__content { min-height: 700px; animation: ynp-fade 160ms ease; }
+.ynp-sheet__footnote {
+  position: absolute;
+  left: 80px;
+  bottom: 40px;
+  font-size: 13px;
+  color: var(--ink-900);
+  opacity: 0.65;
+}
+.ynp-sheet__bar {
+  position: absolute;
+  left: 80px;
+  bottom: 70px;
+}
+
+@keyframes ynp-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Bar ---------- */
+.ynp-bar { display: flex; gap: 36px; }
+.ynp-bar__item {
+  background: transparent;
+  border: 0;
+  padding: 8px 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  color: var(--ink-900);
+  cursor: pointer;
+  transition: opacity 160ms ease;
+}
+.ynp-bar__item:hover { opacity: 0.55; }
+.ynp-bar__item.is-active { font-weight: 700; }
+
+/* ---------- Card ---------- */
+.ynp-card {
+  width: 280px;
+  height: 320px;
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  cursor: pointer;
+}
+.ynp-card:hover { transform: translateY(-2px); }
+.ynp-card.is-muted { opacity: 0.7; box-shadow: 0 4px 4px rgba(0,0,0,0); }
+
+.ynp-card__media { padding: 8px; height: 179px; }
+.ynp-card__image {
+  width: 100%; height: 100%;
+  border-radius: 5px;
+  background: center/cover no-repeat var(--paper);
+}
+.ynp-card__body { padding: 0 8px; flex: 1; display: flex; flex-direction: column; gap: 0; justify-content: center; }
+.ynp-card__title {
+  font-weight: 700;
+  font-size: 20px;
+  padding: 10px 5px;
+  line-height: 1;
+}
+.ynp-card__desc {
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.45;
+  padding: 0 2px 12px;
+  color: var(--ink-900);
+}
+
+/* ---------- Pages ---------- */
+.ynp-list__title {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 1;
+  margin: 0 0 60px;
+  color: var(--ink-900);
+}
+.ynp-list__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 280px);
+  gap: 30px 40px;
+}
+
+/* Homepage hero with right-side image stack */
+.ynp-home {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  min-height: 700px;
+  align-items: center;
+}
+.ynp-home__hero { padding-left: 80px; }
+.ynp-home__title {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 1;
+  margin: 0;
+  color: var(--ink-900);
+  letter-spacing: -0.005em;
+}
+.ynp-home__stack { display: flex; flex-direction: column; gap: 12px; height: 700px; overflow: hidden; }
+.ynp-home__stack-img {
+  flex: 1;
+  background: center/cover no-repeat var(--paper);
+  border-radius: 0;
+}
+
+/* Empty state */
+.ynp-empty { display: flex; align-items: center; min-height: 600px; padding-left: 40px; }
+.ynp-empty__title {
+  font-size: 48px;
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+/* About */
+.ynp-about__lede {
+  max-width: 520px;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Detail overlay */
+.ynp-detail {
+  position: fixed;
+  inset: 0;
+  background: rgba(37,37,37,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 40px;
+  animation: ynp-fade 160ms ease;
+}
+.ynp-detail__inner {
+  width: 1116px;
+  max-width: 100%;
+  height: 600px;
+  background: var(--white);
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+.ynp-detail__image { background: center/cover no-repeat var(--paper); }
+.ynp-detail__body { padding: 60px; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+.ynp-detail__title { font-weight: 700; font-size: 32px; }
+.ynp-detail__desc { font-weight: 300; font-size: 16px; line-height: 1.6; }
+.ynp-detail__close {
+  align-self: flex-start;
+  margin-top: 30px;
+  background: var(--ink-900);
+  color: var(--white);
+  border: 0;
+  border-radius: 4px;
+  padding: 14px 24px;
+  font-family: "Inria Sans", var(--font-sans);
+  font-size: 15px;
+  cursor: pointer;
+}
+.ynp-detail__close:hover { opacity: 0.85; }
